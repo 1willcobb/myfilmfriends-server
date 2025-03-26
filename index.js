@@ -3,6 +3,7 @@ const express = require("express");
 const { Pool } = require("pg");
 const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
+const userRoutes = require("./api/routes/userRoutes");
 
 const app = express();
 const prisma = new PrismaClient();
@@ -11,6 +12,7 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(cors());
+
 
 // // PostgreSQL Connection
 // const pool = new Pool({
@@ -30,6 +32,8 @@ app.get("/", (req, res) => {
   res.send("Welcome to My Film Friends API");
 }
 );
+
+app.use('/api', userRoutes);
 
 // Get all users
 app.get("/users", async (req, res) => {
