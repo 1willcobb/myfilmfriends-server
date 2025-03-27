@@ -4,7 +4,7 @@ import cors from "cors";
 import pkg from "pg";
 const { Pool } = pkg;
 import { PrismaClient } from "@prisma/client";
-import userRoutes from "./api/routes/userRoutes.js";
+import router from "./api/routes/index.js";
 
 const app = express();
 const prisma = new PrismaClient();
@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
   res.status(200).send("Welcome to My Film Friends API");
 });
 
-app.use("/api", userRoutes);
+app.use("/api", router);
 
 // Start Server
 app.listen(port, () => {

@@ -1,11 +1,31 @@
 import express from 'express';
 import * as userController from '../controllers/userController.js';
 
-const router = express.Router();
+const userRouter = express.Router();
 
-router.get('/users', userController.getUsers);
-router.post('/users', userController.createUser);
+//* Utils
+userRouter.get('/verifyLogin', userController.verifyLogin);
+userRouter.get('/verifyToken', userController.getUserTokens);
 
-// Other routes for update, delete, etc.
+//* Posts
+userRouter.post('', userController.createUser);
 
-export default router;
+//* Gets
+userRouter.get('', userController.getAllUsers);
+userRouter.get('/:username', userController.getUserByUsername);
+userRouter.get('/:id', userController.getUserById);
+userRouter.get('/:email', userController.getUserByEmail);
+userRouter.get('/:id/friends', userController.getUserByUsername);
+userRouter.get(':id/friends/:friendId', );
+
+
+
+//* Puts
+userRouter.put('/:id', userController);
+
+
+//* Deletes
+userRouter.delete('/:email', userController.deleteUserByEmail);
+
+
+export default userRouter;
