@@ -1,15 +1,15 @@
-const prisma = require('../prisma/client');
+import prisma from '../../prisma/client.js';
 
-const getUsers = async (req, res, next) => {
+export const getUsers = async (req, res, next) => {
   try {
-    const users = await prisma.user.findMany(); // Directly using Prisma client
+    const users = await prisma.user.findMany();
     res.json(users);
   } catch (err) {
     next(err);
   }
 };
 
-const createUser = async (req, res, next) => {
+export const createUser = async (req, res, next) => {
   try {
     const user = await prisma.user.create({
       data: req.body,
@@ -21,8 +21,3 @@ const createUser = async (req, res, next) => {
 };
 
 // Other CRUD actions: updateUser, deleteUser, etc.
-
-module.exports = {
-  getUsers,
-  createUser,
-};

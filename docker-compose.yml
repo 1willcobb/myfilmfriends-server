@@ -1,8 +1,9 @@
-version: '3'
+version: '3.8'
+
 services:
   postgres:
-    image: postgres:latest
-    restart: always
+    image: postgres:13
+    container_name: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -10,4 +11,17 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
+
+  express:
+    build: .
+    container_name: express-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/mydatabase?schema=public"
+
+volumes:
+  postgres-data:
