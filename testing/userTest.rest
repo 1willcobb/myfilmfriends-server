@@ -1,0 +1,59 @@
+### Root Route
+GET http://localhost:3000
+
+### API Root Route
+GET http://localhost:3000/api
+
+### Create a User
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+  "username": "JohnDoe2",
+  "email": "john2@gmail.com",
+  "password": "securepassword123"
+}
+
+### Get All Users
+GET http://localhost:3000/api/users
+
+### Get User by Username
+GET http://localhost:3000/api/users/username/JohnDoe2
+
+### Get User by Email
+GET http://localhost:3000/api/users/email/john2@gmail.com
+
+### Get User by ID (Replace {userId} with actual ID)
+GET http://localhost:3000/api/users/id/6fb3abe8-632b-40a5-a7ef-cd8aafdc3a29
+
+### Verify Login (Valid Credentials)
+POST http://localhost:3000/api/users/verifyLogin
+Content-Type: application/json
+
+{
+  "userOrEmail": "john2@gmail.com",
+  "password": "securepassword123"
+}
+
+### Verify Login (Invalid Credentials)
+POST http://localhost:3000/api/users/verifyLogin
+Content-Type: application/json
+
+{
+  "userOrEmail": "john2@gmail.com",
+  "password": "wrongpassword"
+}
+
+### Get User Tokens (Replace {userId} with actual ID)
+GET http://localhost:3000/api/users/verifyToken?id=466cc873-a8d1-4ebd-8fb7-3b8d4e03e37f
+
+### Update User (Replace {userId} with actual ID)
+PUT http://localhost:3000/api/users/id/6fb3abe8-632b-40a5-a7ef-cd8aafdc3a29
+Content-Type: application/json
+
+{
+  "username": "JohnDoeUpdated"
+}
+
+### Delete User by Email
+DELETE http://localhost:3000/api/users/email/john2@gmail.com

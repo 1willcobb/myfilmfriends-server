@@ -7,7 +7,6 @@ import { PrismaClient } from "@prisma/client";
 import router from "./api/routes/index.js";
 
 const app = express();
-const prisma = new PrismaClient();
 const port = process.env.PORT || 3000;
 
 // Middleware
