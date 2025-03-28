@@ -18,6 +18,12 @@ router.get('/', (req, res) => {
   res.status(200).send('API Access working');
 });
 
+router.get("*", (req, res) => {
+  // This will catch any undefined routes and return a 404
+  console.log('404 - Route not found');
+  res.status(404).send('Route not found');
+});
+
 router.use('/user', userRouter);
 router.use('/vote', voteRouter);
 router.use('/userFollow', userFollowRouter);
