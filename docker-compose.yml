@@ -21,7 +21,7 @@ services:
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/mydatabase?schema=public"
+      DATABASE_URL: "postgresql://postgres:Mamiya05*@mffdb-instance-1.crqmqysmm2ik.us-west-1.rds.amazonaws.com:5432/mydatabase?schema=public"
 
 volumes:
   postgres-data:
