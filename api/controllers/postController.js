@@ -54,6 +54,36 @@ export async function getUserFeed(req, res) {
   }
 }
 
+export async function getAllPosts(req, res) {
+  const { page = 1, pageSize = 10 } = req.query;
+  const safePage = Math.max(1, isNaN(page) ? 1 : page);
+  const safePageSize = Math.max(1, isNaN(pageSize) ? 10 : pageSize);
+  const skip = (safePage - 1) * safePageSize;
+  try {
+    const posts = await prisma.post.findMany({
+      orderBy: {
+        createdAt: "desc", // Sort posts chronologically
+      },
+      include: {
+        user: true,
+        comments: true,
+        likes: true,
+        votes: true,
+      },
+      skip: skip,
+      take: safePageSize + 1, // Fetch one more than needed to check if there's a next page
+    });
+    const hasMore = posts.length > safePageSize;
+    if (hasMore) {
+      posts.pop();
+    }
+    res.json({ posts, hasMore, pageSize: safePageSize });
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 export async function createPost(req, res) {
   const { content, imageUrl, userId, lens, filmStock, camera, settings } = req.body;
 
@@ -130,10 +160,6 @@ export async function getUserPosts(req, res) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
-
-// posts.js
-
-const prisma = require('./prisma'); // Assuming you're using Prisma to interact with the database
 
 // Update Post
 export async function updatePost(req, res) {
