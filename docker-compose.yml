@@ -1,4 +1,3 @@
-version: "3.8"
 
 services:
   postgres:
@@ -6,8 +5,8 @@ services:
     container_name: postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydatabase
+      POSTGRES_PASSWORD: ${DB_PASSWORD} # Use an environment variable for the password
+      POSTGRES_DB: myfilmfriendsdb
     ports:
       - "5432:5432"
     volumes:
@@ -21,7 +20,6 @@ services:
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: "postgresql://postgres:Mamiya05*@mffdb-instance-1.crqmqysmm2ik.us-west-1.rds.amazonaws.com:5432/mydatabase?schema=public"
-
+      DATABASE_URL: ${DATABASE_URL} # Use an environment variable for the database connection string
 volumes:
   postgres-data:
