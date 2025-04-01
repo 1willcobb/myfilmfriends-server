@@ -1,6 +1,9 @@
 import prisma from "../../prisma/client.js";
 import bcrypt from "bcryptjs";
 import invariant from "tiny-invariant";
+import jwt from "jsonwebtoken";
+
+const SECRET_KEY = process.env.JWT_SECRET || "supersecretkey"; // Replace with a strong secret in .env
 
 export async function getUserById(req, res) {
   console.log("getUserById - before query");
@@ -154,14 +157,15 @@ export async function getUserTokens(req, res) {
 }
 
 export async function verifyLogin(req, res) {
+  console.log("verifyLogin - before query");
   try {
     const { userOrEmail, password } = req.body;
-    let user;
 
+    let user;
     if (userOrEmail.includes("@")) {
-      user = await getUserByEmail({ params: { email: userOrEmail } });
+      user = await prisma.user.findUnique({ where: { email: userOrEmail } });
     } else {
-      user = await getUserByUsername({ params: { username: userOrEmail } });
+      user = await prisma.user.findUnique({ where: { username: userOrEmail } });
     }
 
     if (!user) {
@@ -178,9 +182,43 @@ export async function verifyLogin(req, res) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    res.json({ message: "Login successful", user });
+    // Generate JWT token
+    const token = jwt.sign({ userId: user.id, username: user.username }, SECRET_KEY, {
+      expiresIn: "7d", // Set expiration time
+    });
+
+    res.json({ token, user }); // Send token to frontend
   } catch (error) {
     console.error("Error verifying login:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+
+async function getUserPasswordById(id) {
+  const result = await prisma.password.findUnique({
+    where: { userId: id },
+  });
+
+  if (result) return { hash: result.hash };
+  return null;
+}
+
+export async function updateUserPassword(req, res) {
+  try {
+    const { id } = req.params;
+    const { password } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const updatedUser = await prisma.password.update({
+      where: { userId: id },
+      data: { hash: hashedPassword },
+    });
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error("Error updating user password:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 }

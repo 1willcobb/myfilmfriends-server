@@ -10,10 +10,13 @@ import notificationRouter from './notificationRoutes.js';
 import commentRouter from './commentRoutes.js';
 import chatRouter from './chatRoutes.js';
 import postRouter from './postRoutes.js';
+import authRouter from './authRoutes.js';
+import { requireAuth } from '../../middleware/requireAuth.js';
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
+
   console.log('GET /api');
   res.status(200).send('API Access working');
 });
@@ -29,6 +32,7 @@ router.use('/notification', notificationRouter);
 router.use('/comment', commentRouter);
 router.use('/chat', chatRouter);
 router.use('/post', postRouter);
+router.use('/auth', authRouter);
 
 router.get("*", (req, res) => {
   // This will catch any undefined routes and return a 404
