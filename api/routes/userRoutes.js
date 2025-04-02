@@ -4,7 +4,6 @@ import * as userController from "../controllers/userController.js";
 const userRouter = express.Router();
 
 //* Utils
-userRouter.post("/verifylogin", userController.verifyLogin);
 userRouter.post("/verifytoken", userController.getUserTokens);
 
 //* Posts

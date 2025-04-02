@@ -4,9 +4,9 @@ import cors from "cors";
 import pkg from "pg";
 const { Pool } = pkg;
 import prisma from "./prisma/client.js";
-import session from 'express-session';
-import cookieParser from 'cookie-parser';
-import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import session from "express-session";
+import cookieParser from "cookie-parser";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 
 import router from "./api/routes/index.js";
 
@@ -16,12 +16,18 @@ const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*", // In development only! Restrict this in production
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(
   session({
     // Secret used to sign the session ID cookie. Use a long, random string stored in env variables!
-    secret: process.env.SESSION_SECRET || 'fallback-super-secret-key', // CHANGE THIS!
+    secret: process.env.SESSION_SECRET || "fallback-super-secret-key", // CHANGE THIS!
     resave: false, // Don't save session if unmodified
     saveUninitialized: false, // Don't create session until something stored
     store: new PrismaSessionStore(prisma, {
@@ -36,7 +42,7 @@ app.use(
       httpOnly: true, // Prevents client-side JS accessing the cookie (important security)
       maxAge: 1000 * 60 * 60 * 24 * 7, // Session duration: 7 days in milliseconds
       // sameSite: 'lax', // Or 'strict'. Helps protect against CSRF. Consider implications for RN.
-                         // 'lax' is often a reasonable default.
+      // 'lax' is often a reasonable default.
     },
   })
 );
@@ -44,7 +50,7 @@ app.use(
 // PostgreSQL Connection
 const pool = new Pool({
   user: process.env.DB_USER || "postgres",
-  host: process.env.DB_HOST || "localhost",
+  host: process.env.DB_HOST || "192.168.11.169",
   database: process.env.DB_NAME || "mydatabase",
   password: process.env.DB_PASSWORD || "postgres",
   port: process.env.DB_PORT || 5432,
