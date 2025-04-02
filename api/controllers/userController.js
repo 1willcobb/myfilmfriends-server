@@ -159,7 +159,7 @@ export async function getUserTokens(req, res) {
 export async function verifyLogin(req, res) {
   console.log("verifyLogin - before query");
   try {
-    const { userOrEmail, password } = req.body;
+    const { email: userOrEmail, password } = req.body;
 
     let user;
     if (userOrEmail.includes("@")) {
